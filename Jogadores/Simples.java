@@ -3,7 +3,7 @@ public class Simples extends Jogador {
 		super(ATK, DEF);
 	}
 	
-	public void imprime_jogador(){
+	public void imprimeJogador(){
 		System.out.println ("P1");
 		this.imprime_status();
 	}
