@@ -28,6 +28,12 @@ public abstract class Setor {
     }
     
     //métodos que "sofrerão" polimorfismo nas subclasses
-    public abstract void processarAtaque(Jogador j, Inimigo i);
-    public abstract void processarProcura(Jogador j);
+    public void processarAtaque(Jogador j, Inimigo i) {
+        // Implementação padrão para o ataque
+    }
+
+
+    public void processarProcura(Jogador j) {
+        // Implementação padrão para a procura de itens
+    }
 }
