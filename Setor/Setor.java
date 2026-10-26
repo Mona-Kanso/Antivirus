@@ -26,14 +26,29 @@ public abstract class Setor {
     public boolean tem_inimigo() {
         return !inimigos.isEmpty();
     }
-    
-    //métodos que "sofrerão" polimorfismo nas subclasses
-    public void processarAtaque(Jogador j, Inimigo i) {
-        // Implementação padrão para o ataque
+
+    public void ListaInimigos() {
+        for (Inimigo inimigo : inimigos) {
+            System.out.println("Inimigo: " + inimigo.getNome());
+        }
     }
 
+    public void ImprimeSetor(){
+
+    }
+
+    public boolean MaisDeUmJogadorNoSetor() {
+        return jogadores.size() > 1;
+    }
+
+    //métodos que "sofrerão" polimorfismo nas subclasses
+    public void processarAtaque(Jogador j, Inimigo i) {
+        int novaDefesa = i.getDef() - j.getAtk();
+        i.setDef(novaDefesa);
+        System.out.println("Ataque realizado! Dano causado: " + j.getAtk());
+    }
 
     public void processarProcura(Jogador j) {
-        // Implementação padrão para a procura de itens
+        // implementação para a procura de itens
     }
 }
