@@ -16,4 +16,5 @@ public class SetorOculto extends Setor {
         } else {
             System.out.println("O ataque falhou. O vírus não foi atingido.");
         }
+    }
 }

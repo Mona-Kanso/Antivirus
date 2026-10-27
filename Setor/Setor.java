@@ -33,6 +33,7 @@ public abstract class Setor {
         }
     }
 
+    //depende da implementação do tabuleiro
     public void ImprimeSetor(){
 
     }
@@ -49,6 +50,27 @@ public abstract class Setor {
     }
 
     public void processarProcura(Jogador j) {
-        // implementação para a procura de itens
+        java.util.Random aleatorio = new java.util.Random();
+        int sorteio = aleatorio.nextInt(6) + 1;
+        
+        if (sorteio >= 1 && sorteio <= 3) {
+            System.out.println("Nada foi encontrado no setor.");
+        } else if (sorteio == 4) {
+            j.aumentarDefesa(1);//implementada em Jogador.java
+            System.out.println("Encontrou um item! Ganhou 1 de DEF.");
+        } else if (sorteio == 5) {
+            j.aumentarDefesa(2);//implementada em Jogador.java
+            System.out.println("Encontrou um item raro! Ganhou 2 de DEF.");
+        } else if (sorteio == 6) {
+            System.out.println("Vulnerabilidade encontrada! Todos os inimigos do setor perdem 1 de DEF."); 
+            
+            for (int i = 0; i < this.inimigos.size(); i++) {
+                Inimigo inimigo = this.inimigos.get(i);
+                inimigo.setDef(inimigo.getDef() - 1);
+            }
+            
+            // Limpa da coleção os inimigos que foram eliminados por esta ação
+            this.inimigos.removeIf(inimigo -> inimigo.getDef() <= 0);
+        }
     }
 }
