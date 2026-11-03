@@ -59,8 +59,8 @@ public abstract class Jogador implements Combatentes{
 		System.out.printf(" recebeu +%d de defesa%n", defesa);
 	}
 
-	public void receberDano(int defesa){
-		this.setDEF(this.getDEF() + defesa);
+	public void receberDano(int ataque){
+		this.setDEF(this.getDEF() + ataque);
 		if(this.getDEF() < 0){
 			this.setVida(false);
 		}

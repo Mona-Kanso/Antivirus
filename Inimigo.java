@@ -2,39 +2,33 @@ public class Inimigo {
     int ATK;
     int DEF;
 
-    public void Inimigo () {}
-    public void Inimigo (int ATK, int DEF){
+    public Inimigo () {}
+    public Inimigo (int forca){
+        System.out.println (forca);
         if (ATK > 0 && DEF > 0){
-            this.setATK (ATK);
-            this.setDEF (DEF);
+            this.setATK (forca);
+            this.setDEF (forca);
         }
     }
 
     public void setATK (int ATK){this.ATK = ATK;}
     public void setDEF (int DEF){this.DEF = DEF;}
 
-    public void getNome(){
+    public int getATK () {return this.ATK;}
+    public int getDEF () {return this.DEF;}
 
+    public void getInimigo(){
+        System.out.print (this.getDEF() + "/" + this.getATK() + " ");
     }
 
     public void atacar (Jogador p){
-        p.DEF -= this.ATK;
+        int newDEF = p.getDEF() - this.getDEF();
+        p.setDEF(newDEF);
     }
 
-    public void imprime_inimigo (){
-
-    }
-
-    public void receberDano(int sla){
-
-    }
-
-    public int getDEF(){
-        return this.DEF;
-    }
-
-    public void setDEF(){
-
+    public void receberDano(int atk){
+        int newDEF = this.getDEF() - atk;
+        this.setDEF(newDEF);
     }
 
 }
