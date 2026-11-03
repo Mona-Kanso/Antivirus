@@ -5,7 +5,7 @@ public class Inimigo {
     public Inimigo () {}
     public Inimigo (int forca){
         System.out.println (forca);
-        if (ATK > 0 && DEF > 0){
+        if (forca > 0){
             this.setATK (forca);
             this.setDEF (forca);
         }
@@ -22,7 +22,7 @@ public class Inimigo {
     }
 
     public void atacar (Jogador p){
-        int newDEF = p.getDEF() - this.getDEF();
+        int newDEF = p.getDEF() - this.getATK();
         p.setDEF(newDEF);
     }
 

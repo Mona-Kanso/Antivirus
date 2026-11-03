@@ -10,6 +10,7 @@ public class Tabuleiro {
     // Layout do setor ampliado: largura interna da caixa e espaco de cada coluna.
     private static final int LARGURA_SETOR = 13;
     private static final int LARGURA_COLUNA = 22;
+    private static final int LINHAS_SETOR = 9;
 
     // Portas Leste-Oeste: linha y (1..5), caractere x diz se ha porta entre a
     // coluna x+1 e a coluna x+2.
@@ -32,10 +33,10 @@ public class Tabuleiro {
     // N = normal, O = oculto, P = privado (o centro deve ser normal).
     private static final String[] MAPA_TIPOS = {
         "NOPNN",
-        "NNNOP",
+        "ONNOP",
         "PNNNO",
         "NONPN",
-        "NNONP"
+        "NPONP"
     };
 
     private final Setor[][] setores = new Setor[TAMANHO][TAMANHO];          // [y][x]
@@ -60,6 +61,7 @@ public class Tabuleiro {
         do {
             x = aleatorio.nextInt(TAMANHO) + 1;
             y = aleatorio.nextInt(TAMANHO) + 1;
+            
         } while (x == CENTRO && y == CENTRO);
         this.fonteX = x;
         this.fonteY = y;
@@ -187,26 +189,23 @@ public class Tabuleiro {
     // Imprime o tabuleiro inteiro. p1 e p2 podem ser null (jogador eliminado):
     // nesse caso ele simplesmente nao aparece no desenho.
     public void imprimeTabuleiro(Jogador p1, Jogador p2) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("    ");
+        System.out.print("    ");
         for (int x = 1; x <= TAMANHO; ++x) {
-            sb.append("  ").append(x).append(" "); // linha de numeros x
+            System.out.print("  " + x + " "); // linha de numeros x
         }
-        sb.append("\n");
+        System.out.println();
 
-        sb.append(linhaHorizontal(0));
+        imprimeLinhaHorizontal(0);
         for (int y = 1; y <= TAMANHO; ++y) {
-            sb.append(y).append("   |");
+            System.out.print(y + "   |");
             for (int x = 1; x <= TAMANHO; ++x) {
-                sb.append(conteudoCelula(x, y, p1, p2));
+                System.out.print(conteudoCelula(x, y, p1, p2));
                 boolean porta = x < TAMANHO && portaVisivel(x, y, 'd');
-                sb.append(porta ? '*' : '|');
+                System.out.print(porta ? '*' : '|');
             }
-            sb.append("\n");
-            sb.append(linhaHorizontal(y));
+            System.out.println();
+            imprimeLinhaHorizontal(y);
         }
-        System.out.print(sb);
     }
 
     // Imprime o setor ampliado de onde os jogadores estao:
@@ -221,77 +220,103 @@ public class Tabuleiro {
         if (p2 != null && !distintos.contains(p2.getSetor())) {
             distintos.add(p2.getSetor());
         }
-        if (distintos.isEmpty()) {
-            return;
-        }
 
-        ArrayList<String[]> blocos = new ArrayList<>();
-        for (Setor s : distintos) {
-            blocos.add(montaSetor(s, p1, p2));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (int linha = 0; linha < blocos.get(0).length; ++linha) {
-            for (String[] bloco : blocos) {
-                sb.append(String.format("%-" + LARGURA_COLUNA + "s", bloco[linha]));
+        for (int linha = 0; linha < LINHAS_SETOR; ++linha) {
+            for (Setor s : distintos) {
+                imprimeLinhaSetor(s, linha, p1, p2);
             }
-            sb.append("\n");
+            System.out.println();
         }
-        System.out.print(sb);
     }
 
-    // Monta as linhas (todas com a mesma largura) da caixa de um setor.
-    private String[] montaSetor(Setor s, Jogador p1, Jogador p2) {
+    // Imprime uma linha (0 a LINHAS_SETOR - 1) da caixa de um setor, ja preenchida
+    // ate LARGURA_COLUNA para que as caixas fiquem lado a lado.
+    private void imprimeLinhaSetor(Setor s, int linha, Jogador p1, Jogador p2) {
         int x = s.x;
         int y = s.y;
         boolean temP1 = p1 != null && p1.getSetor() == s;
         boolean temP2 = p2 != null && p2.getSetor() == s;
+        int largura = LARGURA_SETOR + 2;   // caixa com as duas bordas laterais
 
-        StringBuilder inimigos = new StringBuilder();
-        for (Inimigo i : s.inimigos) {
-            if (inimigos.length() > 0) {
-                inimigos.append(' ');
-            }
-            inimigos.append(i.getATK()).append('/').append(i.getDEF());
+        switch (linha) {
+            case 0:
+                String titulo = "Setor [" + x + "," + y + "] " + s.getClass().getSimpleName().replace("Setor", "");
+                System.out.printf("%-" + LARGURA_COLUNA + "s", titulo);
+                return;
+            case 1:
+                imprimeBordaHorizontal(portaVisivel(x, y, 'w'));
+                break;
+            case 2:
+                System.out.print("| ");
+                int usados = 0;
+                for (Inimigo i : s.inimigos) {
+                    if (usados > 0) {
+                        System.out.print(' ');
+                        ++usados;
+                    }
+                    String forca = i.getATK() + "/" + i.getDEF();
+                    System.out.print(forca);
+                    usados += forca.length();
+                }
+                System.out.printf("%" + (LARGURA_SETOR - 1 - usados) + "s|", "");
+                break;
+            case 3:
+            case 5:
+                System.out.printf("|%" + LARGURA_SETOR + "s|", "");
+                break;
+            case 4:
+                System.out.print(portaVisivel(x, y, 'a') ? '*' : '|');
+                System.out.printf("%" + LARGURA_SETOR + "s", "");
+                System.out.print(portaVisivel(x, y, 'd') ? '*' : '|');
+                break;
+            case 6:
+                System.out.printf("| %-4s   %4s |", temP1 ? "P1" : "", temP2 ? "P2" : "");
+                break;
+            case 7:
+                System.out.print("| ");
+                if (temP1) {
+                    System.out.printf("%-4s", p1.getATK() + "/" + p1.getDEF());
+                } else {
+                    System.out.printf("%4s", "");
+                }
+                System.out.print("   ");
+                if (temP2) {
+                    System.out.printf("%4s", p2.getATK() + "/" + p2.getDEF());
+                } else {
+                    System.out.printf("%4s", "");
+                }
+                System.out.print(" |");
+                break;
+            default:
+                imprimeBordaHorizontal(portaVisivel(x, y, 's'));
+                break;
         }
-
-        String nomeP1 = temP1 ? "P1" : "";
-        String nomeP2 = temP2 ? "P2" : "";
-        String statusP1 = temP1 ? p1.getATK() + "/" + p1.getDEF() : "";
-        String statusP2 = temP2 ? p2.getATK() + "/" + p2.getDEF() : "";
-
-        String vazio = String.format("%" + LARGURA_SETOR + "s", "");
-        String tipo = s.getClass().getSimpleName().replace("Setor", "");
-
-        String[] linhas = new String[9];
-        linhas[0] = "Setor [" + x + "," + y + "] " + tipo;
-        linhas[1] = bordaHorizontal(portaVisivel(x, y, 'w'));
-        linhas[2] = String.format("| %-" + (LARGURA_SETOR - 1) + "s|", inimigos);
-        linhas[3] = "|" + vazio + "|";
-        linhas[4] = (portaVisivel(x, y, 'a') ? "*" : "|") + vazio
-                  + (portaVisivel(x, y, 'd') ? "*" : "|");
-        linhas[5] = "|" + vazio + "|";
-        linhas[6] = "| " + String.format("%-4s", nomeP1) + "   " + String.format("%4s", nomeP2) + " |";
-        linhas[7] = "| " + String.format("%-4s", statusP1) + "   " + String.format("%4s", statusP2) + " |";
-        linhas[8] = bordaHorizontal(portaVisivel(x, y, 's'));
-        return linhas;
+        System.out.printf("%" + (LARGURA_COLUNA - largura) + "s", "");
     }
 
     // "|------*------|" (com porta) ou "|-------------|" (parede)
-    private String bordaHorizontal(boolean porta) {
-        String metade = String.format("%" + (LARGURA_SETOR / 2) + "s", "").replace(' ', '-');
-        return "|" + metade + (porta ? "*" : "-") + metade + "|";
+    private void imprimeBordaHorizontal(boolean porta) {
+        int metade = LARGURA_SETOR / 2;
+        System.out.print("|");
+        for (int i = 0; i < metade; ++i) {
+            System.out.print('-');
+        }
+        System.out.print(porta ? '*' : '-');
+        for (int i = 0; i < metade; ++i) {
+            System.out.print('-');
+        }
+        System.out.print("|");
     }
 
     // Linha entre a linha y e y+1 (y = 0 e a borda de cima, y = 5 a de baixo).
-    private String linhaHorizontal(int y) {
-        StringBuilder sb = new StringBuilder("    |");
+    private void imprimeLinhaHorizontal(int y) {
+        System.out.print("    |");
         for (int x = 1; x <= TAMANHO; ++x) {
             boolean porta = y >= 1 && y < TAMANHO && portaVisivel(x, y, 's');
-            sb.append(porta ? "-*-" : "---").append('|');
+            System.out.print(porta ? "-*-" : "---");
+            System.out.print('|');
         }
-        sb.append("\n");
-        return sb.toString();
+        System.out.println();
     }
 
     private boolean portaVisivel(int x, int y, char d) {

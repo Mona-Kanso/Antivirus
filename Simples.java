@@ -1,7 +1,9 @@
 public class Simples extends Jogador {
 
 	public Simples(Setor setor){
-		super(2, 6, setor);
+		int ATK = 2;
+		int DEF = 6;
+		super(ATK, DEF, setor);
 	}
 	
 	public void imprimeJogador(){

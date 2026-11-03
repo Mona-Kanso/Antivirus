@@ -60,7 +60,7 @@ public abstract class Jogador implements Combatentes{
 	}
 
 	public void receberDano(int ataque){
-		this.setDEF(this.getDEF() + ataque);
+		this.setDEF(this.getDEF() - ataque);
 		if(this.getDEF() < 0){
 			this.setVida(false);
 		}
