@@ -1,6 +1,6 @@
 public interface Combatentes {
-    int getAtk();
-    int getDef();
-    void setDef(int novaDefesa);
+    int getATK();
+    int getDEF();
+    void setDEF(int novaDefesa);
     void receberDano(int dano);
 }

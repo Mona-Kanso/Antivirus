@@ -107,7 +107,7 @@ public abstract class Setor {
     public void listarInimigos() {
         for (Inimigo inimigo : inimigos) {
             System.out.print("Inimigo: ");
-            inimigo.getNome();
+            inimigo.getInimigo();
         }
     }
 

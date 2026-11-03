@@ -1,9 +1,12 @@
 public class Suporte extends Jogador {
 
+	
 	public Jogador p1;
 
 	public Suporte (Setor setor, Jogador p1){
-		super(1, 7, setor);
+		int ATK = 1;
+		int DEF = 7;
+		super(ATK, DEF, setor);
 		this.setP1(p1);
 	}
 
