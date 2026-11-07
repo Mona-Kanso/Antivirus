@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class Setor {
-    protected int x;
-    protected int y;
+    protected int coordenadaX;
+    protected int coordenadaY;
+    protected boolean visitado;
     
     //status das portas (true = porta, false = parede)
     //protected pois as subclasses precisam acessar, mas não queremos que outras classes acessem diretamente
@@ -17,10 +19,42 @@ public abstract class Setor {
     protected ArrayList<Inimigo> inimigos;
 
     public Setor(int x, int y) {
-        this.x = x;
-        this.y = y;
         this.jogadores = new ArrayList<>();
         this.inimigos = new ArrayList<>();
+        this.setVisitado(false);
+    }
+
+
+    public ArrayList<Jogador> getJogadores(){
+        return this.jogadores;
+    }
+
+    public ArrayList<Inimigo> getInimigos(){
+        return this.inimigos;
+    }
+
+    public int setCoordenadaX(int x){
+        return this.coordenadaX = x;
+    }
+
+    public int setCoordenadaY(int y){
+        return this.coordenadaX = y;
+    }
+
+    public int getCoordenadaX(){
+        return this.coordenadaX;
+    }
+
+    public int getCoordenadaY(){
+        return this.coordenadaY;
+    }
+
+    public boolean getVisitado(){
+        return this.visitado;
+    }
+
+    public void setVisitado(boolean visitado){
+        this.visitado = visitado;
     }
 
     public void setPortaNorte(boolean porta){
@@ -104,16 +138,24 @@ public abstract class Setor {
         return !inimigos.isEmpty();
     }
 
+    public boolean temJogador(Jogador jogador){
+        return jogadores.contains(jogador);
+    }
+
     public void listarInimigos() {
-        for (Inimigo inimigo : inimigos) {
-            System.out.print("Inimigo: ");
-            inimigo.getNome();
+        System.out.println("Inimigos no setor:");
+        Iterator<Inimigo> i = inimigos.iterator();
+        Inimigo inimigo;
+        int contador = 1;
+        while(i.hasNext()){
+            inimigo = i.next();
+            System.out.println("  [" + (contador) + "] ATK/Def " + inimigo.getAtk() + "/" + inimigo.getDef());
+            contador++;
         }
     }
 
-    //depende da implementação do tabuleiro
-    public void ImprimeSetor(){
-
+    public void imprimeTitulo(){
+        System.out.printf("Setor [%d, %d]", this.getCoordenadaX(), this.getCoordenadaY());
     }
 
     public boolean jogadoresNoMesmoSetor() {
@@ -121,18 +163,16 @@ public abstract class Setor {
     }
 
     //métodos que "sofrerão" polimorfismo nas subclasses
-    public void processarAtaqueJogador(Jogador j, Inimigo i) {
-        i.receberDano(j.getATK());
-        System.out.println("Ataque realizado! Dano causado: " + j.getATK());
+    public void processarAtaqueJogador(Jogador jogador, Inimigo inimigo) {
+        inimigo.receberDano(jogador.getAtk());
+        System.out.println("Ataque realizado! Dano causado: " + jogador.getAtk());
 
-        this.inimigos.removeIf(inimigo -> inimigo.getDEF() <= 0);
+        if(inimigo.getDef() < 0){
+            this.removerInimigo(inimigo);
+        }
     }
 
-    public void processarAtaqueInimigo(){
-        
-    }
-
-    public void processarProcura(Jogador j) {
+    public boolean processarProcura(Jogador jogador) {
         java.util.Random aleatorio = new java.util.Random();
         int sorteio = aleatorio.nextInt(6) + 1;
         
@@ -140,20 +180,39 @@ public abstract class Setor {
             System.out.println("Nada foi encontrado no setor.");
         } else if (sorteio == 4) {
             System.out.print("Encontrou um item!");
-            j.aumentarDefesa(1);
+            jogador.aumentarDefesa(1);
         } else if (sorteio == 5) {
             System.out.print("Encontrou um item raro!");
-            j.aumentarDefesa(2);
+            jogador.aumentarDefesa(2);
         } else if (sorteio == 6) {
-            System.out.println("Vulnerabilidade encontrada! Todos os inimigos do setor perdem 1 de DEF."); 
+            System.out.println("Vulnerabilidade encontrada! Todos os inimigos do setor perdem 1 de Def."); 
             
             for (int i = 0; i < this.inimigos.size(); i++) {
                 Inimigo inimigo = this.inimigos.get(i);
-                inimigo.setDEF(inimigo.getDEF() - 1);
-            }
-            
-            // Limpa da coleção os inimigos que foram eliminados por esta ação
-            this.inimigos.removeIf(inimigo -> inimigo.getDEF() <= 0);
+                inimigo.receberDano(1);
+                if(inimigo.getDef() < 0){
+                    inimigos.remove(inimigos.indexOf(inimigo));
+                }
+            }            
         }
+
+        return true;
     }
+
+    public void adicionaInimigo(Inimigo inimigo){
+        inimigos.add(inimigo);
+    }
+
+    public void adicionaJogador(Jogador jogador){
+        jogadores.add(jogador);
+    }
+
+    public void removerJogador(Jogador jogador){
+        jogadores.remove(jogadores.indexOf(jogador));
+    }
+
+    public void removerInimigo(Inimigo inimigo){
+        inimigos.remove(inimigos.indexOf(inimigo));
+    }
+
 }

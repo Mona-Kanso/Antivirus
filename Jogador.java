@@ -1,36 +1,14 @@
 import java.util.Scanner;
 
-public abstract class Jogador implements Combatentes{
-	protected int ATK;
-	protected int DEF;
+public abstract class Jogador extends Combatente {
+
 	protected Setor setor;
-	protected boolean vida;
+	protected Scanner scanner;
 
-	//Sem construtor padrão, pois o construtor somente será chamado pelas classes filhas
 	public Jogador (int atk, int def, Setor setor){
-		if (atk > 0 && def > 0){
-			this.setATK (atk);
-			this.setDEF (def);
-			this.setSetor(setor);
-		}
-	}
-
-	public void setATK (int atk){
-		if(atk > 0){
-			this.ATK = atk;
-		}
-	}
-
-	public void setDEF (int def){
-		this.DEF = def;
-	}
-
-	public int getATK(){
-		return this.ATK;	
-	}
-
-	public int getDEF(){
-		return this.DEF;
+		super(atk, def);
+		this.setSetor(setor);
+		scanner = new Scanner(System.in);
 	}
 
 	public Setor getSetor(){
@@ -42,82 +20,52 @@ public abstract class Jogador implements Combatentes{
 			this.setor = setor;
 		}
 	}
-	
-	public void setVida(boolean vida){
-		this.vida = vida;
-	}
 
-	public boolean getVida(){
-		return this.vida;
-	}
-
-	//Aumenta defesa do jogador após a recuperação de defesa
 	public void aumentarDefesa(int defesa){
-		this.setDEF(this.getDEF() + defesa);
+		this.setDef(this.getDef() + defesa);
 		System.out.print("Jogador ");
 		this.imprimeJogador();
 		System.out.printf(" recebeu +%d de defesa%n", defesa);
 	}
 
-	public void receberDano(int defesa){
-		this.setDEF(this.getDEF() + defesa);
-		if(this.getDEF() < 0){
+	public void receberDano(int dano){
+		this.setDef(this.getDef() - dano);
+		if(this.getDef() < 0){
 			this.setVida(false);
 		}
 	}
 
-	public boolean movimentar (char direcao){
+	public boolean atacar(){
+		if(this.setor.temInimigo()){
+			this.setor.listarInimigos();
+			Inimigo inimigoAtacado = null;
+			int indiceInimigoAtacado;
 
-		switch(direcao){
-			case 'w':
-				if(this.setor.getPortaNorte()){
-					this.setSetor(this.setor.getVizinhoNorte());
-					return true;
+			while(inimigoAtacado == null){
+				setor.listarInimigos(); //resolver
+				System.out.print("Qual inimigo você gostaria de atacar? ");
+				indiceInimigoAtacado = scanner.nextInt();
+				inimigoAtacado = this.setor.retornarInimigo(indiceInimigoAtacado); 
+				if(inimigoAtacado == null){
+					System.out.println("Inimigo inválido");
 				}
-				return false;
+			}
 
-			case 'a':
-				if(this.setor.getPortaOeste()){
-					this.setSetor(this.setor.getVizinhoOeste());
-					return true;
-				}
-				return false;
-
-			case 's':
-				if(this.setor.getPortaSul()){
-					this.setSetor(this.setor.getVizinhoSul());
-					return true;
-				}
-				return false;
-
-			case 'd':
-				if(this.setor.getPortaLeste()){
-					this.setSetor(this.setor.getVizinhoLeste());
-					return true;
-				}
-				return false;
-
-			default:
-				return false;
+			this.setor.processarAtaqueJogador(this, inimigoAtacado);
+			return true;
+		
+		} else{
+			return false;
 		}
-
-	}
-
-	public void atacar(Inimigo inimigo){
-		this.setor.processarAtaqueJogador(this, inimigo);
+		
 	}
 	
-	public void procurar(){
-		this.setor.processarProcura(this);
-	}
-
-	public boolean recuperarDefesa(int indiceJogador){
-		System.out.print("Ação inválida");
-		return false;
+	public boolean procurar(){
+		return this.setor.processarProcura(this);
 	}
 
 	public void imprime_status(){
-		System.out.printf ("%d/%d%n", this.getATK(), this.getDEF());
+		System.out.printf ("%d/%d%n", this.getAtk(), this.getDef());
 	}
 
 	public abstract void imprimeJogador();
@@ -128,4 +76,29 @@ public abstract class Jogador implements Combatentes{
 		System.out.println("[2] Procurar");
 	}
 
+	public void executarAcoes(){
+		for(int i = 0; i < 2; i++){
+			boolean acaoValida = false;
+			while(!acaoValida){
+				this.listarAcoes();
+				System.out.print("Qual ação você gostaria de realizar? ");
+				int acao = scanner.nextInt();
+
+				switch(acao){
+					case 1:
+						acaoValida = this.atacar();
+						break;
+						
+					case 2:
+						acaoValida = this.procurar();
+						break;
+					
+					default:
+						System.out.println("Opção inválida");
+						return;
+				}
+			}
+		}
+	}
 }
+

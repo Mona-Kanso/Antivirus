@@ -5,7 +5,6 @@ public class Simples extends Jogador {
 	}
 	
 	public void imprimeJogador(){
-		System.out.println ("P1");
-		this.imprime_status();
+		System.out.print(" P1 ");
 	}
 }

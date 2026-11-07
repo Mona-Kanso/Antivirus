@@ -1,4 +1,4 @@
-public class Suporte extends Jogador {
+public class Suporte extends Jogador implements Curandeiro {
 
 	public Jogador p1;
 
@@ -18,17 +18,9 @@ public class Suporte extends Jogador {
 	}
 
 	public void imprimeJogador(){
-		System.out.println ("P2");
-		this.imprime_status();
+		System.out.print(" P2 ");
 	}
 
-	@Override
-	public void listarAcoes(){
-		super.listarAcoes();
-		System.out.println("[3] Recuperar defesa");
-	}
-
-	@Override
 	public boolean recuperarDefesa(int indiceJogador){
 		if(indiceJogador == 1){
 			p1.aumentarDefesa(2);
@@ -39,4 +31,53 @@ public class Suporte extends Jogador {
 		return true;
 	}
 
+	@Override
+	public void executarAcoes(){
+		for(int i = 0; i < 2; i++){
+			boolean acaoValida = false;
+			while(!acaoValida){
+				super.listarAcoes();
+				if(i == 0){
+					System.out.println("[3] Recuperar defesa");
+				}
+
+				System.out.print("Qual ação você gostaria de realizar? ");
+				int acao = scanner.nextInt();
+
+				switch(acao){
+					//Ação de atacar
+					case 1:
+						acaoValida = this.atacar();
+						break;
+						
+					case 2:
+						acaoValida = this.procurar();
+						break;
+
+					case 3:
+						if(i == 0){
+							if(this.setor.jogadoresNoMesmoSetor()){
+								System.out.println("[1] P1");
+								System.out.println("[2] P2");
+								int indiceJogador = 0;
+								while(indiceJogador != 1 || indiceJogador != 2){
+									System.out.print("De qual jogador você gostaria de recuperar a defesa?");
+									indiceJogador = scanner.nextInt();
+								} 
+								this.recuperarDefesa(indiceJogador);
+							}
+
+							this.aumentarDefesa(2);
+							return;
+						} 
+
+						break;
+					
+					default:
+						System.out.println("Opção inválida");
+						acaoValida = false;;
+				}
+			}
+		}
+	}
 }

@@ -1,40 +1,24 @@
-public class Inimigo {
-    int ATK;
-    int DEF;
+public class Inimigo extends Combatente{
 
-    public void Inimigo () {}
-    public void Inimigo (int ATK, int DEF){
-        if (ATK > 0 && DEF > 0){
-            this.setATK (ATK);
-            this.setDEF (DEF);
-        }
+    public Inimigo(int forca){
+        super(forca, forca);
     }
 
-    public void setATK (int ATK){this.ATK = ATK;}
-    public void setDEF (int DEF){this.DEF = DEF;}
-
-    public void getNome(){
-
+    public void imprimeStatus(){
+        System.out.print (this.getDef() + "/" + this.getAtk() + " ");
     }
 
-    public void atacar (Jogador p){
-        p.DEF -= this.ATK;
+    public void atacar (Jogador jogador){
+        System.out.print("Jogador");
+        jogador.imprimeJogador();
+        System.out.printf("recebeu %d de dano%n", this.getAtk());
+        jogador.receberDano(this.getAtk());
     }
 
-    public void imprime_inimigo (){
-
-    }
-
-    public void receberDano(int sla){
-
-    }
-
-    public int getDEF(){
-        return this.DEF;
-    }
-
-    public void setDEF(){
-
-    }
-
+    public void receberDano(int dano){
+		this.setDef(this.getDef() - dano);
+		if(this.getDef() < 0){
+			this.setVida(false);
+		}
+	}
 }

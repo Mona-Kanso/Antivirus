@@ -5,8 +5,7 @@ public class SetorPrivado extends Setor {
     }
 
     @Override
-    public void processarProcura(Jogador j) {
-        //ação bloqueada
-        System.out.println("Ação de procura não permitida em Setores Privados.");
+    public boolean processarProcura(Jogador j) {
+        return false;
     }
 }

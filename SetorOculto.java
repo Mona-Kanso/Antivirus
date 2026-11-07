@@ -6,18 +6,16 @@ public class SetorOculto extends Setor {
         super(x, y);
     }
 
-
+//marcello ver!!
     @Override
-    public void processarAtaqueJogador(Jogador j, Inimigo i) {
+    public void processarAtaqueJogador(Jogador jogador, Inimigo inimigo) {
         java.util.Random aleatorio = new java.util.Random();
         if (aleatorio.nextBoolean()) {
-            int novaDefesa = i.getDEF() - j.getATK();
-            i.setDEF(novaDefesa);
-            System.out.println("Acerto no setor oculto! Dano causado: " + j.getATK());
-            this.inimigos.removeIf(inimigo -> inimigo.getDEF() <= 0);
-
-        } else {
-            System.out.println("O ataque falhou. O vírus não foi atingido.");
+            inimigo.receberDano(jogador.getAtk());
+            System.out.printf("Acerto no setor oculto! Dano causado: %d%n" + jogador.getAtk());
+            if(inimigo.getDef() < 0){
+                this.removerInimigo(inimigo);
+            }
         }
     }
 }

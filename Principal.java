@@ -1,135 +1,171 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
-public class Principal{
+public class Principal {
 
-    public static void main(String[] args){
+    private static final int MAX_CICLOS = 25;
 
-        Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
+    private static Random aleatorio = new Random();
+    private static ArrayList<Jogador> jogadores = new ArrayList<>();
+    private static int ciclos;
+    private static Tabuleiro tabuleiro;
+    private static Jogador vencedor;
 
-        //Mudar isso depois
-        Setor setorInicial = new SetorNormal(3, 3);
-        
-        ArrayList<Jogador> jogadores = new ArrayList<Jogador>();
+    private static void iniciar() {
+        tabuleiro = new Tabuleiro();
+        ciclos = 0;
+        Setor central = tabuleiro.retornaSetorCentral();
 
-        jogadores.set(1, new Simples(setorInicial));
-        jogadores.set(2, new Suporte(setorInicial, jogadores.get(1)));
+        Jogador p1 = new Simples(central);
+        Jogador p2 = new Suporte(central, p1);
+        jogadores.add(p1);
+        jogadores.add(p2);
+
+        for(Jogador jogador : jogadores){
+            central.adicionaJogador(jogador);
+        }
+
+        System.out.println("==============================");
+        System.out.println("|     ANTIVIRUS POR UM DIA   |");
+        System.out.println("==============================");
+        System.out.println("Encontrem a fonte de infeccao (X) em ate " + MAX_CICLOS + " ciclos.");
+        System.out.println("P1 (simples) = ATK/DEF 2/6   P2 (suporte) = ATK/DEF 1/7");
+    }
 
 
-        int jogadoresComVida = 2;
-        int ciclo = 25;
-        int acao;
-        boolean acaoValida;
-        char direcao = ' ';
-        int indiceInimigoAtacado;
-        Inimigo inimigoAtacado;
-        boolean movimentoRealizado;
+//tirar jogadores.get(1) em todas as linhas que é mencionado
+    private static boolean jogoAcabou() {
+        return vencedor != null || ciclos > 25 || !jogadores.get(1).getVida();
+    }
 
-        //Inserir função que imprime e inicializa o tabuleiro
+    private static void turnoJogador(Jogador jogador){
 
-        while(ciclo > 0 && jogadoresComVida > 0){
+        if(jogador.getVida()){
+            //Movimentar o jogador
+            char direcao = ' ';
+            if(jogador.setor.temInimigo()){
+                System.out.print("Jogador ");
+                jogador.imprimeJogador();
+                System.out.println(" não pode se movimentar. Ainda há inimigos no setor!");
+            } 
             
-            System.out.printf("==================== CICLO %d ====================%n", ciclo);
-            for(Jogador jogador : jogadores){
-                if(jogador.getVida()){
-                    //Movimentar o jogador
-                    direcao = ' ';
-                    if(jogador.setor.temInimigo()){
-                        System.out.print("Jogador ");
-                        jogador.imprimeJogador();
-                        System.out.println(" não pode se movimentar. Ainda há inimigos no setor!");
-                    } 
-                    
-                    else{
+            else{
 
-                        movimentoRealizado = false;
+                boolean movimentoRealizado = false;
+                while(!movimentoRealizado){
 
-                        while(!movimentoRealizado){
-
-                            while (direcao != 'a' || direcao != 'd' || direcao != 'w' || direcao != 's'){
-                                System.out.print("Digite a direção do movimento: ");
-                                direcao = scanner.next().charAt(0);
-                                direcao = Character.toLowerCase(direcao);
-                            }
-
-                            movimentoRealizado = jogador.movimentar(direcao);
-                        }
-
-
+                    while (direcao != 'a' && direcao != 'd' && direcao != 'w' && direcao != 's'){
+                        System.out.print("Digite a direção do movimento: ");
+                        direcao = scanner.next().charAt(0);
+                        direcao = Character.toLowerCase(direcao);
                     }
 
-                    //Realizar 2 ações do jogador
-                    for(int i = 0; i < 2; i++){
-                        acaoValida = false;
-                        while(!acaoValida){
-                            System.out.print("Qual ação você gostaria de realizar? ");
-                            acao = scanner.nextInt();
-                            
-                            switch(acao){
-                                //Ação de atacar
-                                case 1:
-                                    if(jogador.setor.temInimigo()){
-                                        jogador.setor.listarInimigos();
-                                        inimigoAtacado = null;
-
-                                        while(inimigoAtacado == null){
-                                            System.out.print("Qual inimigo você gostaria de atacar? ");
-                                            indiceInimigoAtacado = scanner.nextInt();
-                                            inimigoAtacado = jogador.setor.retornarInimigo(indiceInimigoAtacado); 
-                                            if(inimigoAtacado == null){
-                                                System.out.println("Inimigo inválido");
-                                            }
-                                        }
-
-                                        jogador.atacar(inimigoAtacado);
-                                        acaoValida = true;
-                                    }
-
-                                    else{
-                                        System.out.println("Não há inimimgos no setor");
-                                    }
-
-                                    break;
-                                    
-                                case 2:
-                                    jogador.procurar();
-                                    acaoValida = true;
-                                    break;
-
-                                case 3:
-                                    if(jogador.setor.jogadoresNoMesmoSetor()){
-                                        System.out.println("[1] P1");
-                                        System.out.println("[2] P2");
-                                        int indiceJogador = 0;
-                                        while(indiceJogador != 1 || indiceJogador != 2){
-                                            System.out.print("De qual jogador você gostaria de recuperar a defesa?");
-                                            indiceJogador = scanner.nextInt();
-                                        } 
-                                        acaoValida = jogador.recuperarDefesa(indiceJogador);
-                                    }
-                                    acaoValida = jogador.recuperarDefesa(2);
-
-                                    break;
-                                
-                                default:
-                                    System.out.println("Opção inválida");
-                                    acaoValida = false;
-
-                                    break;
-                            }
-                        }
-
-                    }
-
-                    if(!jogador.getVida()){
-                        jogadoresComVida--;
-                    }
+                    movimentoRealizado = tabuleiro.movimentarJogador(jogador, direcao);
                 }
 
-                }
+                Setor novo = jogador.getSetor();
+                boolean primeiraVisita = tabuleiro.entrarNoSetor(novo);   // gera os inimigos
+                jogador.imprimeJogador();
+                System.out.println("entrou no setor [" + novo.getCoordenadaX() + "," + novo.getCoordenadaY() + "] (");
+
+                if (tabuleiro.ehFonte(novo)) {
+                    vencedor = jogador;
+                } 
                 
-            ciclo--;
+                else if (primeiraVisita) {
+                    System.out.println("Foram gerados " + novo.inimigos.size() + " inimigo(s) neste setor!");
+                }
+
+            }
+
+            jogador.executarAcoes();
+
         }
     }
-        
+
+    public static void main(String[] args) {
+        iniciar();
+
+        while (!jogoAcabou()) {
+            System.out.println("\n================ CICLO " + ciclos + " de " + MAX_CICLOS + " ================");
+
+            imprimeTabuleiro();
+            for (Jogador jogador : jogadores) {
+                turnoJogador(jogador);
+            }
+
+            if (vencedor == null) {
+                turnoInimigos();
+            }
+            ciclos++;
+        }
+
+        fimDeJogo();
+    }
+
+    private static void turnoInimigos() {
+        System.out.println("\n--------------- Turno dos inimigos ---------------");
+
+        Setor setor;
+        ArrayList<Inimigo> inimigos;
+        for (Jogador jogador : jogadores) {
+            setor = jogador.getSetor();
+            inimigos = setor.getInimigos();
+            for(Inimigo inimigo : inimigos){
+                if (jogador.getVida()) {
+                    inimigo.atacar(jogador);
+                }
+            }
+        }
+    }
+
+    private static void fimDeJogo() {
+        System.out.println("\n==============================================");
+        imprimeTabuleiro();
+        if (vencedor != null) {
+            System.out.print("VITORIA! ");
+            vencedor.imprimeJogador();
+            System.out.println("encontrou a fonte de infeccao!");
+        } else if (!jogadores.get(1).getVida()) {
+            System.out.println("DERROTA! O jogador simples morreu.");
+        } else {
+            System.out.println("FIM DOS CICLOS! A fonte de infeccao nao foi encontrada a tempo.");
+        }
+        System.out.println("==============================================");
+    }
+
+    // ------------------------------------------------------------------ apresentacao
+    private static void imprimeTabuleiro() {
+        Jogador p1 = jogadores.get(0);
+        Jogador p2 = jogadores.get(1);
+        // Jogadores eliminados nao sao desenhados (o Tabuleiro ignora null).
+        tabuleiro.imprimeTabuleiro(p1.getVida() ? p1 : null, p2.getVida() ? p2 : null);
+    }
+
+    // Setor ampliado dos jogadores vivos: um só se estiverem juntos, dois se separados.
+    private static void imprimeSetores() {
+        Jogador p1 = jogadores.get(0);
+        Jogador p2 = jogadores.get(1);
+        System.out.println();
+        tabuleiro.imprimeSetores(p1.getVida() ? p1 : null, p2.getVida() ? p2 : null);
+    }
+
+    private static void mostrarSituacao() {
+        System.out.println();
+        imprimeTabuleiro();
+        imprimeSetores();
+        Setor setor;
+        for (Jogador jogador : jogadores) {
+            setor = jogador.getSetor();
+            setor.listarInimigos();
+            jogador.imprimeJogador();
+            System.out.printf(": ATK/DEF %d/%d", jogador.getAtk(), jogador.getDef());  
+            setor.imprimeTitulo();
+            if(!jogador.getVida()){
+                System.out.println(" (ELIMINADO)");
+            }
+        }
+    }
 }
