@@ -2,6 +2,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+//Mona Aya Kanso | GRR:20250270
+//Marcello Eduardo Pereira Jorge | GRR:20244350
+//Raphael Gaias Wrublewski | GRR:20244362
+
 public class Principal {
 
     private static final int MAX_CICLOS = 25;
@@ -34,15 +38,26 @@ public class Principal {
         System.out.println("P1 (simples) = ATK/DEF 2/6   P2 (suporte) = ATK/DEF 1/7");
     }
 
+    private static boolean todosMortos() {
+        for (Jogador jogador : jogadores) {
+            if (jogador.getVida()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-//tirar jogadores.get(1) em todas as linhas que é mencionado
     private static boolean jogoAcabou() {
-        return vencedor != null || ciclos > 25 || !jogadores.get(1).getVida();
+        return vencedor != null || ciclos >= MAX_CICLOS || todosMortos();
     }
 
     private static void turnoJogador(Jogador jogador){
 
         if(jogador.getVida()){
+            System.out.println("==============================");
+            System.out.print("|    TURNO DO JOGADOR ");
+            jogador.imprimeJogador();
+            System.out.println("    |");
             //Movimentar o jogador
             char direcao = ' ';
             if(jogador.setor.temInimigo()){
@@ -63,6 +78,11 @@ public class Principal {
                     }
 
                     movimentoRealizado = tabuleiro.movimentarJogador(jogador, direcao);
+                    if(tabuleiro.ehFonte(jogador.getSetor())){
+                        vencedor = jogador;
+                        return;
+                    }
+                    direcao = ' ';
                 }
 
                 Setor novo = jogador.getSetor();
@@ -80,6 +100,8 @@ public class Principal {
 
             }
 
+            imprimeTabuleiroComSetores();
+
             jogador.executarAcoes();
 
         }
@@ -92,8 +114,10 @@ public class Principal {
             System.out.println("\n================ CICLO " + ciclos + " de " + MAX_CICLOS + " ================");
 
             imprimeTabuleiro();
-            for (Jogador jogador : jogadores) {
-                turnoJogador(jogador);
+            for (Jogador jogador : jogadores){
+                if(vencedor == null){
+                    turnoJogador(jogador);
+                }
             }
 
             if (vencedor == null) {
@@ -127,7 +151,7 @@ public class Principal {
         if (vencedor != null) {
             System.out.print("VITORIA! ");
             vencedor.imprimeJogador();
-            System.out.println("encontrou a fonte de infeccao!");
+            System.out.println(" encontrou a fonte de infeccao!");
         } else if (!jogadores.get(1).getVida()) {
             System.out.println("DERROTA! O jogador simples morreu.");
         } else {
@@ -152,20 +176,26 @@ public class Principal {
         tabuleiro.imprimeSetores(p1.getVida() ? p1 : null, p2.getVida() ? p2 : null);
     }
 
-    private static void mostrarSituacao() {
-        System.out.println();
-        imprimeTabuleiro();
-        imprimeSetores();
-        Setor setor;
-        for (Jogador jogador : jogadores) {
-            setor = jogador.getSetor();
-            setor.listarInimigos();
-            jogador.imprimeJogador();
-            System.out.printf(": ATK/DEF %d/%d", jogador.getAtk(), jogador.getDef());  
-            setor.imprimeTitulo();
-            if(!jogador.getVida()){
-                System.out.println(" (ELIMINADO)");
-            }
-        }
+    // private static void mostrarSituacao() {
+    //     System.out.println();
+    //     imprimeTabuleiro();
+    //     imprimeSetores();
+    //     Setor setor;
+    //     for (Jogador jogador : jogadores) {
+    //         setor = jogador.getSetor();
+    //         setor.listarInimigos();
+    //         jogador.imprimeJogador();
+    //         System.out.printf(": ATK/DEF %d/%d", jogador.getAtk(), jogador.getDef());  
+    //         setor.imprimeTitulo();
+    //         if(!jogador.getVida()){
+    //             System.out.println(" (ELIMINADO)");
+    //         }
+    //     }
+    // }
+
+    private static void imprimeTabuleiroComSetores() {
+        Jogador p1 = jogadores.get(0);
+        Jogador p2 = jogadores.get(1);
+        tabuleiro.imprimeTabuleiroComSetores(p1.getVida() ? p1 : null, p2.getVida() ? p2 : null);
     }
 }

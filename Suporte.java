@@ -18,7 +18,7 @@ public class Suporte extends Jogador implements Curandeiro {
 	}
 
 	public void imprimeJogador(){
-		System.out.print(" P2 ");
+		System.out.print("P2");
 	}
 
 	public boolean recuperarDefesa(int indiceJogador){
@@ -60,14 +60,17 @@ public class Suporte extends Jogador implements Curandeiro {
 								System.out.println("[1] P1");
 								System.out.println("[2] P2");
 								int indiceJogador = 0;
-								while(indiceJogador != 1 || indiceJogador != 2){
+								while(indiceJogador != 1 && indiceJogador != 2){
 									System.out.print("De qual jogador você gostaria de recuperar a defesa?");
 									indiceJogador = scanner.nextInt();
 								} 
 								this.recuperarDefesa(indiceJogador);
 							}
 
-							this.aumentarDefesa(2);
+							else{
+								this.aumentarDefesa(2);
+							}
+
 							return;
 						} 
 

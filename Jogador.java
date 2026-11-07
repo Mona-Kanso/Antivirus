@@ -37,12 +37,11 @@ public abstract class Jogador extends Combatente {
 
 	public boolean atacar(){
 		if(this.setor.temInimigo()){
-			this.setor.listarInimigos();
 			Inimigo inimigoAtacado = null;
 			int indiceInimigoAtacado;
 
 			while(inimigoAtacado == null){
-				setor.listarInimigos(); //resolver
+				this.setor.listarInimigos();
 				System.out.print("Qual inimigo você gostaria de atacar? ");
 				indiceInimigoAtacado = scanner.nextInt();
 				inimigoAtacado = this.setor.retornarInimigo(indiceInimigoAtacado); 
@@ -77,6 +76,7 @@ public abstract class Jogador extends Combatente {
 	}
 
 	public void executarAcoes(){
+		int jogadorPreso = 0;
 		for(int i = 0; i < 2; i++){
 			boolean acaoValida = false;
 			while(!acaoValida){
@@ -87,15 +87,26 @@ public abstract class Jogador extends Combatente {
 				switch(acao){
 					case 1:
 						acaoValida = this.atacar();
+						jogadorPreso++;
 						break;
 						
 					case 2:
 						acaoValida = this.procurar();
+						jogadorPreso++;
 						break;
 					
 					default:
-						System.out.println("Opção inválida");
-						return;
+						jogadorPreso++;
+						break;
+				}
+
+				if(!acaoValida){
+					System.out.println("AÇÃO INVÁLIDA");
+				}
+
+				if(jogadorPreso > 10){
+					System.out.println("=========== AÇÃO PULADA =========== ");
+					return;
 				}
 			}
 		}

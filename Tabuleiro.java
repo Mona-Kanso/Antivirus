@@ -1,8 +1,44 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 
 public class Tabuleiro {
+
+        // Executa um desenho e devolve o texto que ele imprimiria, sem mostrar nada na tela.
+    private String capturar(Runnable desenho) {
+        PrintStream original = System.out;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer));
+        try {
+            desenho.run();
+        } finally {
+            System.setOut(original);
+        }
+        return buffer.toString();
+    }
+
+    // Tabuleiro à esquerda, setor(es) ampliado(s) à direita.
+    public void imprimeTabuleiroComSetores(Jogador p1, Jogador p2) {
+        String[] tab = capturar(() -> imprimeTabuleiro(p1, p2)).split("\\R");
+        String[] set = capturar(() -> imprimeSetores(p1, p2)).split("\\R");
+
+        int larguraTab = 0;
+        for (String linha : tab) {
+            larguraTab = Math.max(larguraTab, linha.length());
+        }
+
+        final int DESLOCAMENTO = 2;   // o setor começa na altura da linha 1 do tabuleiro
+        int total = Math.max(tab.length, set.length + DESLOCAMENTO);
+
+        for (int i = 0; i < total; ++i) {
+            String esquerda = i < tab.length ? tab[i] : "";
+            int j = i - DESLOCAMENTO;
+            String direita = (j >= 0 && j < set.length) ? set[j] : "";
+            System.out.println(String.format("%-" + larguraTab + "s", esquerda) + "    " + direita);
+        }
+    }
 
     private static final int TAMANHO = 5;
     private static final int CENTRO = 3;
@@ -69,6 +105,7 @@ public class Tabuleiro {
 			case 'w':
 				if(setorAntigo.getPortaNorte()){
 					jogador.setSetor(setorAntigo.getVizinhoNorte());
+                    setorAntigo.getVizinhoNorte().adicionaJogador(jogador);
 					setorAntigo.removerJogador(jogador);
 					return true;
 				}
@@ -77,6 +114,7 @@ public class Tabuleiro {
 			case 'a':
 				if(setorAntigo.getPortaOeste()){
 					jogador.setSetor(setorAntigo.getVizinhoOeste());
+                    setorAntigo.getVizinhoOeste().adicionaJogador(jogador);
                     setorAntigo.removerJogador(jogador);
 					return true;
 				}
@@ -85,6 +123,7 @@ public class Tabuleiro {
 			case 's':
 				if(setorAntigo.getPortaSul()){
 					jogador.setSetor(setorAntigo.getVizinhoSul());
+                    setorAntigo.getVizinhoSul().adicionaJogador(jogador);
                     setorAntigo.removerJogador(jogador);
 					return true;
 				}
@@ -93,6 +132,7 @@ public class Tabuleiro {
 			case 'd':
 				if(setorAntigo.getPortaLeste()){
 					jogador.setSetor(setorAntigo.getVizinhoLeste());
+                    setorAntigo.getVizinhoLeste().adicionaJogador(jogador);
                     setorAntigo.removerJogador(jogador);
 					return true;
 				}
@@ -234,7 +274,7 @@ public class Tabuleiro {
         }
     }
 
-    // Imprime uma linha (0 a LINHAS_SETOR - 1) da caixa de um setor, ja preenchida
+// Imprime uma linha (0 a LINHAS_SETOR - 1) da caixa de um setor, ja preenchida
     // ate LARGURA_COLUNA para que as caixas fiquem lado a lado.
     private void imprimeLinhaSetor(Setor setor, int linha, Jogador p1, Jogador p2) {
         int x = setor.getCoordenadaX();
@@ -245,9 +285,7 @@ public class Tabuleiro {
 
         switch (linha) {
             case 0:
-                System.out.printf("%-" + LARGURA_COLUNA);
-                setor.imprimeTitulo();
-                System.out.println();
+                System.out.printf("%-" + LARGURA_COLUNA + "s", setor.getTitulo());
                 return;
             case 1:
                 imprimeBordaHorizontal(portaVisivel(x, y, 'w'));
@@ -262,7 +300,7 @@ public class Tabuleiro {
                         ++espacamento;
                     }
                     inimigo.imprimirStatus();
-                    espacamento += 3; //tamanho da string impressa
+                    espacamento += 3; // tamanho da string impressa
                 }
                 System.out.printf("%" + (LARGURA_SETOR - 1 - espacamento) + "s|", "");
                 break;
@@ -275,30 +313,18 @@ public class Tabuleiro {
                 System.out.printf("%" + LARGURA_SETOR + "s", "");
                 System.out.print(portaVisivel(x, y, 'd') ? '*' : '|');
                 break;
-            case 6:
-                System.out.printf("| %-4s   %4s |");
-                if(setor.temJogador(p1)){
-                    p1.imprimeJogador();
-                } 
-
-                if(setor.temJogador(p2)){
-                    p2.imprimeJogador();
-                }
-                
-                break;
-            case 7:
+            case 6: // P1 e P2
                 System.out.print("| ");
-                if (temP1) {
-                    System.out.printf("%-4s", p1.getAtk() + "/" + p1.getDef());
-                } else {
-                    System.out.printf("%4s", "");
-                }
+                System.out.print(temP1 ? "P1  " : "    ");
                 System.out.print("   ");
-                if (temP2) {
-                    System.out.printf("%4s", p2.getAtk() + "/" + p2.getDef());
-                } else {
-                    System.out.printf("%4s", "");
-                }
+                System.out.print(temP2 ? "P2  " : "    ");
+                System.out.print(" |");
+                break;
+            case 7: // ATK/DEF
+                System.out.print("| ");
+                System.out.printf("%-4s", temP1 ? p1.getAtk() + "/" + p1.getDef() : "");
+                System.out.print("   ");
+                System.out.printf("%-4s", temP2 ? p2.getAtk() + "/" + p2.getDef() : "");
                 System.out.print(" |");
                 break;
             default:
@@ -339,8 +365,8 @@ public class Tabuleiro {
         }
         int vx = x + (c == 'd' ? 1 : c == 'a' ? -1 : 0);
         int vy = y + (c == 's' ? 1 : c == 'w' ? -1 : 0);
-        Setor setorAnalisado = getSetor(y-1, x-1);
-        Setor setorVizinho = getSetor(vy-1, vx-1);
+        Setor setorAnalisado = getSetor(x, y);
+        Setor setorVizinho = getSetor(vx, vy);
         return setorAnalisado.getVisitado() || setorVizinho.getVisitado();
     }
 
@@ -355,10 +381,12 @@ public class Tabuleiro {
 
         else if (setor.temJogador(p1)){
             p1.imprimeJogador();
+            System.out.print(" ");
         }
 
         else if (setor.temJogador(p2)){
             p2.imprimeJogador();
+            System.out.print(" ");
         }
 
         else if (setor == this.retornaSetorCentral()){

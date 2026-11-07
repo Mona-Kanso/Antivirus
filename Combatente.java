@@ -5,7 +5,7 @@ public abstract class Combatente{
 
     public Combatente(int atk, int def){
         this.setAtk(atk);
-        this.setDef(atk);
+        this.setDef(def);
         this.vida = true;
     }
 
@@ -24,9 +24,7 @@ public abstract class Combatente{
 	}
 
     public void setDef(int def){
-        if(def > 0){
-            this.def = def;
-        }
+        this.def = def;
     }
 
     public boolean getVida(){

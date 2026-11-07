@@ -6,6 +6,7 @@ public class SetorPrivado extends Setor {
 
     @Override
     public boolean processarProcura(Jogador j) {
+        System.out.println("*&$)(*&@# ERRO NA PROCURA *&$)(*&@#");
         return false;
     }
 }

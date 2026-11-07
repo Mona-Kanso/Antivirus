@@ -21,6 +21,8 @@ public abstract class Setor {
     public Setor(int x, int y) {
         this.jogadores = new ArrayList<>();
         this.inimigos = new ArrayList<>();
+        this.setCoordenadaX(x);
+        this.setCoordenadaY(y);
         this.setVisitado(false);
     }
 
@@ -38,7 +40,7 @@ public abstract class Setor {
     }
 
     public int setCoordenadaY(int y){
-        return this.coordenadaX = y;
+        return this.coordenadaY = y;
     }
 
     public int getCoordenadaX(){
@@ -131,7 +133,10 @@ public abstract class Setor {
     }
 
     public Inimigo retornarInimigo(int indice){
-        return this.inimigos.get(indice);
+        if (indice < 1 || indice > this.inimigos.size()) {
+            return null;
+        }
+        return this.inimigos.get(indice-1);
     }
 
     public boolean temInimigo() {
@@ -154,8 +159,12 @@ public abstract class Setor {
         }
     }
 
+    public String getTitulo(){
+        return String.format("Setor [%d, %d]", this.getCoordenadaX(), this.getCoordenadaY());
+    }
+
     public void imprimeTitulo(){
-        System.out.printf("Setor [%d, %d]", this.getCoordenadaX(), this.getCoordenadaY());
+        System.out.print(this.getTitulo());
     }
 
     public boolean jogadoresNoMesmoSetor() {
@@ -212,7 +221,7 @@ public abstract class Setor {
     }
 
     public void removerInimigo(Inimigo inimigo){
-        inimigos.remove(inimigos.indexOf(inimigo));
+        inimigos.remove(inimigo);
     }
 
 }
