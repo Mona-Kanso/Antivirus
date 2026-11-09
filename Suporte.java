@@ -18,7 +18,7 @@ public class Suporte extends Jogador implements Curandeiro {
 	}
 
 	public void imprimeJogador(){
-		System.out.print("P2");
+		System.out.print(Cores.ANSI_GREEN + "P2" + Cores.ANSI_RESET);
 	}
 
 	public boolean recuperarDefesa(int indiceJogador){
@@ -73,7 +73,7 @@ public class Suporte extends Jogador implements Curandeiro {
 
 							return;
 						} 
-
+						
 						break;
 					
 					default:

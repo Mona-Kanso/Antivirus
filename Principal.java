@@ -88,7 +88,7 @@ public class Principal {
                 Setor novo = jogador.getSetor();
                 boolean primeiraVisita = tabuleiro.entrarNoSetor(novo);   // gera os inimigos
                 jogador.imprimeJogador();
-                System.out.println("entrou no setor [" + novo.getCoordenadaX() + "," + novo.getCoordenadaY() + "] (");
+                System.out.println(" entrou no setor [" + novo.getCoordenadaX() + "," + novo.getCoordenadaY() + "] ");
 
                 if (tabuleiro.ehFonte(novo)) {
                     vencedor = jogador;

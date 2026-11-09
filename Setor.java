@@ -176,7 +176,7 @@ public abstract class Setor {
         inimigo.receberDano(jogador.getAtk());
         System.out.println("Ataque realizado! Dano causado: " + jogador.getAtk());
 
-        if(inimigo.getDef() < 0){
+        if(inimigo.getDef() <= 0){
             this.removerInimigo(inimigo);
         }
     }
