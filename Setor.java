@@ -199,7 +199,7 @@ public abstract class Setor {
             for (int i = 0; i < this.inimigos.size(); i++) {
                 Inimigo inimigo = this.inimigos.get(i);
                 inimigo.receberDano(1);
-                if(inimigo.getDef() < 0){
+                if(inimigo.getDef() <= 0){
                     inimigos.remove(inimigos.indexOf(inimigo));
                 }
             }            
