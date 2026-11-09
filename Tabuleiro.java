@@ -5,8 +5,45 @@ import java.io.PrintStream;
 
 
 public class Tabuleiro {
+	
+	private static final int TAMANHO = 5;
+    private static final int CENTRO = 3;
+    private int fonteX;
+    private int fonteY;
 
-        // Executa um desenho e devolve o texto que ele imprimiria, sem mostrar nada na tela.
+    // Layout do setor ampliado: largura interna da caixa e espaco de cada coluna.
+    private static final int LARGURA_SETOR = 13;
+    private static final int LARGURA_COLUNA = 22;
+    private static final int LINHAS_SETOR = 9;
+
+    // N = normal, O = oculto, P = privado (o centro deve ser normal).
+    private static final String[] MAPA_TIPOS = {
+        "NOPNN",
+        "ONNOP",
+        "PNNNO",
+        "NONPN",
+        "NPONP"
+    };
+
+    private final Setor[][] setores = new Setor[TAMANHO][TAMANHO];          // [y][x]
+    private final Random aleatorio = new Random();
+
+    private boolean portasLR[][] = {
+        {true, false, true, true},
+        {true, true, false, true}, 
+        {true, true, true, true},
+        {false, true, true, false},
+        {true, false, true, true}
+    };
+
+    private boolean portasUD[][] = {
+        {true, false, true, true, false},
+        {false, true, true, false, true},
+        {true, false, true, false, true},
+        {false, true, false, true, true}
+    };
+	
+    // Executa um desenho e devolve o texto que ele imprimiria, sem mostrar nada na tela.
     private String capturar(Runnable desenho) {
         PrintStream original = System.out;
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -43,44 +80,6 @@ public class Tabuleiro {
             System.out.println(String.format("%-" + larguraTab + "s", esquerda) + "    " + direita);
         }
     }
-
-    private static final int TAMANHO = 5;
-    private static final int CENTRO = 3;
-    int fonteX;
-    int fonteY;
-
-    // Layout do setor ampliado: largura interna da caixa e espaco de cada coluna.
-    private static final int LARGURA_SETOR = 13;
-    private static final int LARGURA_COLUNA = 22;
-    private static final int LINHAS_SETOR = 9;
-
-    // N = normal, O = oculto, P = privado (o centro deve ser normal).
-    private static final String[] MAPA_TIPOS = {
-        "NOPNN",
-        "ONNOP",
-        "PNNNO",
-        "NONPN",
-        "NPONP"
-    };
-
-    private final Setor[][] setores = new Setor[TAMANHO][TAMANHO];          // [y][x]
-    private final Random aleatorio = new Random();
-
-    private boolean portasLR[][] = {
-        {true, false, true, true},
-        {true, true, false, true}, 
-        {true, true, true, true},
-        {false, true, true, false},
-        {true, false, true, true}
-    };
-
-    private boolean portasUD[][] = {
-        {true, false, true, true, false},
-        {false, true, true, false, true},
-        {true, false, true, false, true},
-        {false, true, false, true, true}
-    };
-
     public Setor getSetor(int x, int y) {
         return setores[y - 1][x - 1];
     }
