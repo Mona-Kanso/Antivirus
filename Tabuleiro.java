@@ -5,45 +5,11 @@ import java.io.PrintStream;
 
 
 public class Tabuleiro {
-
-        // Executa um desenho e devolve o texto que ele imprimiria, sem mostrar nada na tela.
-    private String capturar(Runnable desenho) {
-        PrintStream original = System.out;
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(buffer));
-        try {
-            desenho.run();
-        } finally {
-            System.setOut(original);
-        }
-        return buffer.toString();
-    }
-
-    // Tabuleiro à esquerda, setor(es) ampliado(s) à direita.
-    public void imprimeTabuleiroComSetores(Jogador p1, Jogador p2) {
-        String[] tab = capturar(() -> imprimeTabuleiro(p1, p2)).split("\\R");
-        String[] set = capturar(() -> imprimeSetores(p1, p2)).split("\\R");
-
-        int larguraTab = 0;
-        for (String linha : tab) {
-            larguraTab = Math.max(larguraTab, linha.length());
-        }
-
-        final int DESLOCAMENTO = 2;   // o setor começa na altura da linha 1 do tabuleiro
-        int total = Math.max(tab.length, set.length + DESLOCAMENTO);
-
-        for (int i = 0; i < total; ++i) {
-            String esquerda = i < tab.length ? tab[i] : "";
-            int j = i - DESLOCAMENTO;
-            String direita = (j >= 0 && j < set.length) ? set[j] : "";
-            System.out.println(String.format("%-" + larguraTab + "s", esquerda) + "    " + direita);
-        }
-    }
-
-    private static final int TAMANHO = 5;
+	
+	private static final int TAMANHO = 5;
     private static final int CENTRO = 3;
-    int fonteX;
-    int fonteY;
+    private int fonteX;
+    private int fonteY;
 
     // Layout do setor ampliado: largura interna da caixa e espaco de cada coluna.
     private static final int LARGURA_SETOR = 13;
@@ -76,7 +42,44 @@ public class Tabuleiro {
         {true, false, true, false, true},
         {false, true, false, true, true}
     };
+	
+    // Executa um desenho e devolve o texto que ele imprimiria, sem mostrar nada na tela.
+    private String capturar(Runnable desenho) {
+        PrintStream original = System.out;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer));
+        try {
+            desenho.run();
+        } finally {
+            System.setOut(original);
+        }
+        return buffer.toString();
+    }
+    
+    // tira a cor do texto para fazer o calculo do espaco necessario
+    private String semCor(String s) { return s.replaceAll("\u001B\\[[;\\d]*m", ""); }
 
+    // Tabuleiro à esquerda, setor(es) ampliado(s) à direita.
+    public void imprimeTabuleiroComSetores(Jogador p1, Jogador p2) {
+        String[] tab = capturar(() -> imprimeTabuleiro(p1, p2)).split("\\R");
+        String[] set = capturar(() -> imprimeSetores(p1, p2)).split("\\R");
+
+        int larguraTab = 0;
+        for (String linha : tab) {
+            String linhaSemCor = semCor (linha);
+            larguraTab = Math.max(larguraTab, linhaSemCor.length());
+        }
+
+        final int DESLOCAMENTO = 2;   // o setor começa na altura da linha 1 do tabuleiro
+        int total = Math.max(tab.length, set.length + DESLOCAMENTO);
+
+        for (int i = 0; i < total; ++i) {
+            String esquerda = i < tab.length ? tab[i] : "";
+            int j = i - DESLOCAMENTO;
+            String direita = (j >= 0 && j < set.length) ? set[j] : "";
+            System.out.println(String.format("%-" + larguraTab + "s", esquerda) + "    " + direita);
+        }
+    }
     public Setor getSetor(int x, int y) {
         return setores[y - 1][x - 1];
     }
@@ -299,7 +302,9 @@ public class Tabuleiro {
                         System.out.print(' ');
                         ++espacamento;
                     }
+                    System.out.print(Cores.ANSI_RED);
                     inimigo.imprimirStatus();
+                    System.out.print(Cores.ANSI_RESET);   // volta ao texto preto, mantendo o fundo
                     espacamento += 3; // tamanho da string impressa
                 }
                 System.out.printf("%" + (LARGURA_SETOR - 1 - espacamento) + "s|", "");
@@ -315,9 +320,9 @@ public class Tabuleiro {
                 break;
             case 6: // P1 e P2
                 System.out.print("| ");
-                System.out.print(temP1 ? "P1  " : "    ");
+                System.out.print(temP1 ? Cores.ANSI_BLUE + "P1  " + Cores.ANSI_RESET : "    ");
                 System.out.print("   ");
-                System.out.print(temP2 ? "P2  " : "    ");
+                System.out.print(temP2 ? Cores.ANSI_GREEN + "P2  " + Cores.ANSI_RESET : "    ");
                 System.out.print(" |");
                 break;
             case 7: // ATK/DEF
@@ -394,7 +399,7 @@ public class Tabuleiro {
         }
 
         else if (ehFonte(setor)){
-            System.out.print(" X ");
+            System.out.print(Cores.ANSI_YELLOW + " X " + Cores.ANSI_RESET);
         }
 
         else{

@@ -12,8 +12,8 @@ public class Inimigo extends Combatente{
     }
 
     public void atacar (Jogador jogador){
-        aleatorio.nextInt(6);
-        if(6%2 == 0){
+        int dado = aleatorio.nextInt(6);
+        if(dado%2 == 0){
             System.out.print("Jogador ");
             jogador.imprimeJogador();
             System.out.printf(" recebeu %d de dano%n", this.getAtk());

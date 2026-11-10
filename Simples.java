@@ -5,6 +5,6 @@ public class Simples extends Jogador {
 	}
 	
 	public void imprimeJogador(){
-		System.out.print("P1");
+		System.out.print(Cores.ANSI_BLUE + "P1" + Cores.ANSI_RESET);
 	}
 }
