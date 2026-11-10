@@ -42,7 +42,15 @@ public class Suporte extends Jogador implements Curandeiro {
 				}
 
 				System.out.print("Qual ação você gostaria de realizar? ");
+
+				if(!scanner.hasNextInt()){
+					System.out.println("Entrada inválida! Digite apenas números.");
+					scanner.nextLine();
+					continue;
+				}
+
 				int acao = scanner.nextInt();
+				scanner.nextLine();
 
 				switch(acao){
 					//Ação de atacar
@@ -62,7 +70,16 @@ public class Suporte extends Jogador implements Curandeiro {
 								int indiceJogador = 0;
 								while(indiceJogador != 1 && indiceJogador != 2){
 									System.out.print("De qual jogador você gostaria de recuperar a defesa?");
+
+									if(!scanner.hasNextInt()){
+										System.out.println("Entrada inválida! Digite apenas números.");
+										scanner.nextLine();
+										continue;
+									}									
+
 									indiceJogador = scanner.nextInt();
+									scanner.nextLine();
+
 								} 
 								this.recuperarDefesa(indiceJogador);
 							}

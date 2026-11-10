@@ -43,7 +43,17 @@ public abstract class Jogador extends Combatente {
 			while(inimigoAtacado == null){
 				this.setor.listarInimigos();
 				System.out.print("Qual inimigo você gostaria de atacar? ");
+
+				//valida se foi digitado um numero
+				if(!scanner.hasNextInt()){
+					System.out.println("Entrada inválida! Digite apenas o número do inimigo.");
+					scanner.nextLine();
+					continue;
+				}
+
 				indiceInimigoAtacado = scanner.nextInt();
+				scanner.nextLine()
+
 				inimigoAtacado = this.setor.retornarInimigo(indiceInimigoAtacado); 
 				if(inimigoAtacado == null){
 					System.out.println("Inimigo inválido");
@@ -82,7 +92,15 @@ public abstract class Jogador extends Combatente {
 			while(!acaoValida){
 				this.listarAcoes();
 				System.out.print("Qual ação você gostaria de realizar? ");
+
+				if(!scanner.hasNextInt()){
+					System.out.println("Entrada inválida! Digite apenas números.");
+					scanner.nextLine();
+					continue;
+				}
+
 				int acao = scanner.nextInt();
+				scanner.nextLine();
 
 				switch(acao){
 					case 1:
