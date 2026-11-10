@@ -176,23 +176,6 @@ public class Principal {
         tabuleiro.imprimeSetores(p1.getVida() ? p1 : null, p2.getVida() ? p2 : null);
     }
 
-    // private static void mostrarSituacao() {
-    //     System.out.println();
-    //     imprimeTabuleiro();
-    //     imprimeSetores();
-    //     Setor setor;
-    //     for (Jogador jogador : jogadores) {
-    //         setor = jogador.getSetor();
-    //         setor.listarInimigos();
-    //         jogador.imprimeJogador();
-    //         System.out.printf(": ATK/DEF %d/%d", jogador.getAtk(), jogador.getDef());  
-    //         setor.imprimeTitulo();
-    //         if(!jogador.getVida()){
-    //             System.out.println(" (ELIMINADO)");
-    //         }
-    //     }
-    // }
-
     private static void imprimeTabuleiroComSetores() {
         Jogador p1 = jogadores.get(0);
         Jogador p2 = jogadores.get(1);

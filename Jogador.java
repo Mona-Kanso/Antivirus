@@ -30,7 +30,7 @@ public abstract class Jogador extends Combatente {
 
 	public void receberDano(int dano){
 		this.setDef(this.getDef() - dano);
-		if(this.getDef() < 0){
+		if(this.getDef() <= 0){
 			this.setVida(false);
 		}
 	}

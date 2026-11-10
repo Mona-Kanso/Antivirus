@@ -37,7 +37,7 @@ public abstract class Combatente{
     
 	public void receberDano(int atk){
 		this.setDef(this.getDef() - atk);
-		if(this.getDef() < 0){
+		if(this.getDef() <= 0){
 			this.setVida(false);
             System.out.println("Morte de combatente");
 		}
