@@ -6,7 +6,7 @@ public class SetorOculto extends Setor {
         super(x, y);
     }
 
-//marcello ver!!
+    //50% de chance de acerto
     @Override
     public void processarAtaqueJogador(Jogador jogador, Inimigo inimigo) {
         java.util.Random aleatorio = new java.util.Random();
@@ -16,6 +16,9 @@ public class SetorOculto extends Setor {
             if(inimigo.getDef() <= 0){
                 this.removerInimigo(inimigo);
             }
+        }
+        else{
+            System.out.println("Ataque errado...")
         }
     }
 }
