@@ -188,21 +188,20 @@ public abstract class Setor {
         if (sorteio >= 1 && sorteio <= 3) {
             System.out.println("Nada foi encontrado no setor.");
         } else if (sorteio == 4) {
-            System.out.print("Encontrou um item!");
+            System.out.println("Encontrou um item!");
             jogador.aumentarDefesa(1);
         } else if (sorteio == 5) {
-            System.out.print("Encontrou um item raro!");
+            System.out.println("Encontrou um item raro!");
             jogador.aumentarDefesa(2);
         } else if (sorteio == 6) {
             System.out.println("Vulnerabilidade encontrada! Todos os inimigos do setor perdem 1 de Def."); 
             
-            for (int i = 0; i < this.inimigos.size(); i++) {
-                Inimigo inimigo = this.inimigos.get(i);
+            for (Inimigo inimigo : this.inimigos) {
                 inimigo.receberDano(1);
-                if(inimigo.getDef() <= 0){
-                    inimigos.remove(inimigos.indexOf(inimigo));
-                }
-            }            
+            }
+        
+            //remove todos os inimigos que ficaram com Def <= 0
+            this.inimigos.removeIf(inimigo -> inimigo.getDef() <= 0);        
         }
 
         return true;
