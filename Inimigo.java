@@ -7,10 +7,6 @@ public class Inimigo extends Combatente{
         super(forca, forca);
     }
 
-    public void imprimeStatus(){
-        System.out.print (this.getDef() + "/" + this.getAtk() + " ");
-    }
-
     public void atacar (Jogador jogador){
         int dado = aleatorio.nextInt(6);
         if(dado%2 == 0){
