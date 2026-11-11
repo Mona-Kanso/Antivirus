@@ -381,8 +381,8 @@ public class Tabuleiro {
         Setor setor = getSetor(x, y);
 
         // Verifica quem realmente está VIVO neste setor
-        boolean p1VivoNoSetor = p1.getDef() > 0 && setor.temJogador(p1);
-        boolean p2VivoNoSetor = p2.getDef() > 0 && setor.temJogador(p2);
+        boolean p1VivoNoSetor = setor.temJogador(p1);
+        boolean p2VivoNoSetor = setor.temJogador(p2);
 
         if (p1VivoNoSetor && p2VivoNoSetor) {
             System.out.print(" P ");

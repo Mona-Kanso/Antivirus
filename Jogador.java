@@ -5,7 +5,7 @@ public abstract class Jogador extends Combatente {
 	protected Setor setor;
 	protected Scanner scanner;
 
-	public Jogador (int atk, int def, Setor setor){
+	public Jogador (int atk, int def, Setor setor, Scanner scanner){
 		super(atk, def);
 		this.setSetor(setor);
 		this.scanner = scanner;
