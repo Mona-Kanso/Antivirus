@@ -13,12 +13,12 @@ public class SetorOculto extends Setor {
         if (aleatorio.nextBoolean()) {
             inimigo.receberDano(jogador.getAtk());
             System.out.printf("Acerto no setor oculto! Dano causado: %d%n", jogador.getAtk());
-            if(inimigo.getDef() <= 0){
+            if(!inimigo.getVida()){
                 this.removerInimigo(inimigo);
             }
         }
         else{
-            System.out.println("Ataque errado...")
+            System.out.println("Ataque errado...");
         }
     }
 }

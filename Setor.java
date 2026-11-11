@@ -144,7 +144,7 @@ public abstract class Setor {
     }
 
     public boolean temJogador(Jogador jogador){
-        return jogador != null && jogador.getDef() > 0 && jogadores.contains(jogador);
+        return jogador != null && jogador.getVida() && jogadores.contains(jogador);
     }
 
     public void listarInimigos() {
@@ -170,7 +170,7 @@ public abstract class Setor {
     public boolean jogadoresNoMesmoSetor() {
         int jogadoresVivos = 0;
         for (Jogador j : jogadores){
-            if(j.getDef() > 0){
+            if(j.getVida()){
                 jogadoresVivos++;
             }
         }
@@ -182,7 +182,7 @@ public abstract class Setor {
         inimigo.receberDano(jogador.getAtk());
         System.out.println("Ataque realizado! Dano causado: " + jogador.getAtk());
 
-        if(inimigo.getDef() <= 0){
+        if(!inimigo.getVida()){
             this.removerInimigo(inimigo);
         }
     }
@@ -223,10 +223,6 @@ public abstract class Setor {
 
     public void removerJogador(Jogador jogador){
         this.jogadores.remove(jogador);
-    }
-
-    public void limparJogadoresMortos(){
-        this.jogadores.removeIf(j -> j.getDef() <= 0);
     }
 
     public void removerInimigo(Inimigo inimigo){

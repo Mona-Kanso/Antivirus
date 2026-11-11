@@ -11,7 +11,6 @@ public class Principal {
     private static final int MAX_CICLOS = 25;
 
     private static Scanner scanner = new Scanner(System.in);
-    private static Random aleatorio = new Random();
     private static ArrayList<Jogador> jogadores = new ArrayList<>();
     private static int ciclos;
     private static Tabuleiro tabuleiro;
