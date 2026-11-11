@@ -16,11 +16,4 @@ public class Inimigo extends Combatente{
             jogador.receberDano(this.getAtk());
         }
     }
-
-    public void receberDano(int dano){
-		this.setDef(this.getDef() - dano);
-		if(this.getDef() < 0){
-			this.setVida(false);
-		}
-	}
 }
