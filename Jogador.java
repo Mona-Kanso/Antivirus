@@ -73,10 +73,6 @@ public abstract class Jogador extends Combatente {
 		return this.setor.processarProcura(this);
 	}
 
-	public void imprime_status(){
-		System.out.printf ("%d/%d%n", this.getAtk(), this.getDef());
-	}
-
 	public abstract void imprimeJogador();
 
 	public void listarAcoes(){
