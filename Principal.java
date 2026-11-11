@@ -22,8 +22,8 @@ public class Principal {
         ciclos = 0;
         Setor central = tabuleiro.retornaSetorCentral();
 
-        Jogador p1 = new Simples(central);
-        Jogador p2 = new Suporte(central, p1);
+        Jogador p1 = new Simples(central, scanner);
+        Jogador p2 = new Suporte(central, p1, scanner);
         jogadores.add(p1);
         jogadores.add(p2);
 
@@ -60,7 +60,7 @@ public class Principal {
             System.out.println("    |");
             //Movimentar o jogador
             char direcao = ' ';
-            if(jogador.setor.temInimigo()){
+            if(jogador.getSetor().temInimigo()){
                 System.out.print("Jogador ");
                 jogador.imprimeJogador();
                 System.out.println(" não pode se movimentar. Ainda há inimigos no setor!");
@@ -95,7 +95,7 @@ public class Principal {
                 } 
                 
                 else if (primeiraVisita) {
-                    System.out.println("Foram gerados " + novo.inimigos.size() + " inimigo(s) neste setor!");
+                    System.out.println("Foram gerados " + novo.getInimigos().size() + " inimigo(s) neste setor!");
                 }
 
             }
