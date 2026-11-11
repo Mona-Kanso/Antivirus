@@ -8,7 +8,7 @@ public abstract class Jogador extends Combatente {
 	public Jogador (int atk, int def, Setor setor){
 		super(atk, def);
 		this.setSetor(setor);
-		scanner = new Scanner(System.in);
+		this.scanner = scanner;
 	}
 
 	public Setor getSetor(){
@@ -52,7 +52,7 @@ public abstract class Jogador extends Combatente {
 				}
 
 				indiceInimigoAtacado = scanner.nextInt();
-				scanner.nextLine()
+				scanner.nextLine();
 
 				inimigoAtacado = this.setor.retornarInimigo(indiceInimigoAtacado); 
 				if(inimigoAtacado == null){
