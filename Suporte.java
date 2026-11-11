@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Suporte extends Jogador implements Curandeiro {
 
 	public Jogador p1;

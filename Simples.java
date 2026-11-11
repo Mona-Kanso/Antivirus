@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Simples extends Jogador {
 
 	public Simples(Setor setor, Scanner scanner){
