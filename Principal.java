@@ -152,8 +152,8 @@ public class Principal {
             System.out.print("VITORIA! ");
             vencedor.imprimeJogador();
             System.out.println(" encontrou a fonte de infeccao!");
-        } else if (!jogadores.get(1).getVida()) {
-            System.out.println("DERROTA! O jogador simples morreu.");
+        } else if (todosMortos()) {
+            System.out.println("DERROTA!");
         } else {
             System.out.println("FIM DOS CICLOS! A fonte de infeccao nao foi encontrada a tempo.");
         }
