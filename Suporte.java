@@ -4,7 +4,12 @@ public class Suporte extends Jogador implements Curandeiro {
 
 	public Suporte (Setor setor, Jogador p1){
 		super(1, 7, setor);
-		this.setP1(p1);
+
+		//suporte exige que exista um simples
+		if(p1 == null){
+			throw new IllegalArgumentException("O jogador de Suporte não pode existir sem um Jogador Simples (P1)");
+		}
+		this.p1 = p1;
 	}
 
 	public Jogador getP1(){
