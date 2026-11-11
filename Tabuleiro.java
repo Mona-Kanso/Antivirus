@@ -380,29 +380,29 @@ public class Tabuleiro {
     private void conteudoCelula(int x, int y, Jogador p1, Jogador p2) {
         Setor setor = getSetor(x, y);
 
-        if (setor.jogadoresNoMesmoSetor()){
+        // Verifica quem realmente está VIVO neste setor
+        boolean p1VivoNoSetor = p1.getDef() > 0 && setor.temJogador(p1);
+        boolean p2VivoNoSetor = p2.getDef() > 0 && setor.temJogador(p2);
+
+        if (p1VivoNoSetor && p2VivoNoSetor) {
             System.out.print(" P ");
         } 
-
-        else if (setor.temJogador(p1)){
+        else if (p1VivoNoSetor) {
             p1.imprimeJogador();
             System.out.print(" ");
-        }
-
-        else if (setor.temJogador(p2)){
+        } 
+        else if (p2VivoNoSetor) {
             p2.imprimeJogador();
             System.out.print(" ");
-        }
-
-        else if (setor == this.retornaSetorCentral()){
+        } 
+        // Se não houver nenhum jogador VIVO na célula, exibe os elementos estáticos do mapa
+        else if (setor == this.retornaSetorCentral()) {
             System.out.print(" C ");
-        }
-
-        else if (ehFonte(setor)){
+        } 
+        else if (ehFonte(setor)) {
             System.out.print(Cores.ANSI_YELLOW + " X " + Cores.ANSI_RESET);
-        }
-
-        else{
+        } 
+        else {
             System.out.print("   ");
         }
     }

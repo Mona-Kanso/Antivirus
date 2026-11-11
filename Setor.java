@@ -144,7 +144,7 @@ public abstract class Setor {
     }
 
     public boolean temJogador(Jogador jogador){
-        return jogadores.contains(jogador);
+        return jogador != null && jogador.getDef() > 0 && jogadores.contains(jogador);
     }
 
     public void listarInimigos() {
@@ -168,7 +168,13 @@ public abstract class Setor {
     }
 
     public boolean jogadoresNoMesmoSetor() {
-        return jogadores.size() > 1;
+        int jogadoresVivos = 0;
+        for (Jogador j : jogadores){
+            if(j.getDef() > 0){
+                jogadoresVivos++;
+            }
+        }
+        return jogadoresVivos > 1;
     }
 
     //métodos que "sofrerão" polimorfismo nas subclasses
@@ -216,7 +222,11 @@ public abstract class Setor {
     }
 
     public void removerJogador(Jogador jogador){
-        jogadores.remove(jogadores.indexOf(jogador));
+        this.jogadores.remove(jogador);
+    }
+
+    public void limparJogadoresMortos(){
+        this.jogadores.removeIf(j -> j.getDef() <= 0);
     }
 
     public void removerInimigo(Inimigo inimigo){
