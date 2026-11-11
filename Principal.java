@@ -77,6 +77,9 @@ public class Principal {
                     }
 
                     movimentoRealizado = tabuleiro.movimentarJogador(jogador, direcao);
+                    if(!movimentoRealizado){
+                        System.out.println("Não há portas por esse caminho");
+                    }
                     if(tabuleiro.ehFonte(jogador.getSetor())){
                         vencedor = jogador;
                         return;
