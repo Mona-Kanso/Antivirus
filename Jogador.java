@@ -74,6 +74,13 @@ public abstract class Jogador extends Combatente {
 		System.out.println("[2] Procurar");
 	}
 
+	@Override
+    public void imprimirMorteCombatente(){
+        System.out.print("Morte do jogador ");
+		this.imprimeJogador();
+    }
+
+
 	public void executarAcoes(){
 		int jogadorPreso = 0;
 		for(int i = 0; i < 2; i++){
@@ -111,7 +118,7 @@ public abstract class Jogador extends Combatente {
 					System.out.println("AÇÃO INVÁLIDA");
 				}
 
-				if(jogadorPreso > 10){
+				if(jogadorPreso > 5){
 					System.out.println("=========== AÇÃO PULADA =========== ");
 					return;
 				}

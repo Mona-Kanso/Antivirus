@@ -39,10 +39,14 @@ public abstract class Combatente{
 		this.setDef(this.getDef() - dano);
 		if(this.getDef() <= 0){
 			this.setVida(false);
-            System.out.println("Morte de combatente");
+            imprimirMorteCombatente();
 		}
 	}
 
+    public void imprimirMorteCombatente(){
+        System.out.println("Morte de combatente");
+    }
+    
     public void imprimirStatus(){
         System.out.printf("%d/%d", this.getAtk(), this.getDef());
     }

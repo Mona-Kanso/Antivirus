@@ -21,8 +21,8 @@ public class Principal {
         ciclos = 0;
         Setor central = tabuleiro.retornaSetorCentral();
 
-        Jogador p1 = new Simples(central, scanner);
-        Jogador p2 = new Suporte(central, p1, scanner);
+        Jogador p1 = new JogadorSimples(central, scanner);
+        Jogador p2 = new JogadorSuporte(central, p1, scanner);
         jogadores.add(p1);
         jogadores.add(p2);
 

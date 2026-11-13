@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
-public class Simples extends Jogador {
+public class JogadorSimples extends Jogador {
 
-	public Simples(Setor setor, Scanner scanner){
+	public JogadorSimples(Setor setor, Scanner scanner){
 		super(2, 6, setor, scanner);
 	}
 	

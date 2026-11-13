@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
-public class Suporte extends Jogador implements Curandeiro {
+public class JogadorSuporte extends Jogador implements Curandeiro {
 
 	public Jogador p1;
 
-	public Suporte (Setor setor, Jogador p1, Scanner scanner){
+	public JogadorSuporte (Setor setor, Jogador p1, Scanner scanner){
 		super(1, 7, setor, scanner);
 
 		//suporte exige que exista um simples

@@ -7,6 +7,11 @@ public class Inimigo extends Combatente{
         super(forca, forca);
     }
 
+    @Override
+    public void imprimirMorteCombatente(){
+        System.out.println("Morte de inimigo");
+    }
+
     public void atacar (Jogador jogador){
         int dado = aleatorio.nextInt(6);
         if(dado%2 == 0){
